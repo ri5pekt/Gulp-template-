@@ -59,7 +59,6 @@ gulp.task('useref', function(){
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
     .pipe(gulpIf('*.css', postcss([autoprefixer])))
-    .pipe(gulpIf('*.css', cssnano()))
     .pipe(gulp.dest('dist'))
 });
 
@@ -68,13 +67,18 @@ gulp.task('fonts', function() {
   .pipe(gulp.dest('dist/fonts'))
 });
 
+gulp.task('copy-js', function() {
+  return gulp.src('app/js/**/*')
+  .pipe(gulp.dest('dist/js'))
+});
+
 gulp.task('clean:dist', function() {
   return del.sync('dist');
 });
 
 gulp.task('build', function (callback) {
   runSequence('clean:dist', 
-    ['sass', 'useref', 'images', 'fonts'],
+    ['sass', 'useref', 'images', 'fonts', 'copy-js'],
     callback
   )
 });
